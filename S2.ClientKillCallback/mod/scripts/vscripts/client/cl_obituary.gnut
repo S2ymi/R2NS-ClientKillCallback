@@ -13,8 +13,16 @@ global function Obituary_SetIndexOffset
 global function ServerCallback_SquadLeaderBonus
 global function ServerCallback_SquadLeaderDoubleXP
 
-//		northstar
+// S2.ClientKillCallback
 global function AddCallback_OnPlayerKilled
+
+global struct ObituaryCallbackParams
+{
+	entity victim
+	entity attacker
+	int damageSourceId
+	int scriptDamageType
+}
 /////////////////
 
 const NUM_OBITUARY_LINES = 4		// cant change arbitrarily, need to have matching entries in the .res file
@@ -36,7 +44,7 @@ struct
 	int indexOffest = 0
 	
 	//		northstar
-	array< void functionref( entity victim, entity attacker, int damageSourceId ) > onPlayerKilledClientCallbacks
+	array< void functionref( ObituaryCallbackParams ) > onPlayerKilledClientCallbacks
 	/////////////////
 } file
 
@@ -60,7 +68,7 @@ global struct ObitStringData
 }
 
 //		northstar
-void function AddCallback_OnPlayerKilled( void functionref( entity victim, entity attacker, int damageSourceId ) callback )
+void function AddCallback_OnPlayerKilled( void functionref( ObituaryCallbackParams ) callback )
 {
 	Assert( !file.onPlayerKilledClientCallbacks.contains( callback ), "Already added " + string( callbackFunc ) + " with AddCallback_OnPlayerKilled"  )
 	file.onPlayerKilledClientCallbacks.append( callback )
@@ -303,9 +311,15 @@ function Obituary( entity attacker, string attackerClass, entity victim, int scr
 	//
 	Obituary_Print_Localized( localizedObit, attackerInfo.displayColor, victimInfo.displayColor, <255, 255, 255>, backgroundColor, backgroundAlpha )
 
-	//		northstar
-	foreach(thingy in file.onPlayerKilledClientCallbacks){
-		thingy(victim, attacker, damageSourceId)
+	// S2.ClientKillCallback
+	foreach( callback in file.onPlayerKilledClientCallbacks ){
+		ObituaryCallbackParams params
+		params.victim = victim
+		params.attacker = attacker
+		params.damageSourceId = damageSourceId
+		params.scriptDamageType = scriptDamageType
+
+		callback( params )
 	}
 	/////////////////
 }
