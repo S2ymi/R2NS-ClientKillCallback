@@ -1,6 +1,6 @@
 {
 	"Name": "S2.ClientKillCallback",
-	"Description": "Adds a client side callback triggered when any player dies.\nvoid AddClientCallback_OnPlayerKilled(void functionref(entity victim, entity attacker) customCallback)",
+	"Description": "Adds a client side callback triggered when any player dies.\nvoid AddClientCallback_OnPlayerKilled(void functionref(ObituaryCallbackParams{entity victim, entity attacker, int damageSourceId, int scriptDamageType}) customCallback)",
 	"LoadPriority": 1,
 	"RequiredOnClient": false,
 	"Version": "2.0.0"
