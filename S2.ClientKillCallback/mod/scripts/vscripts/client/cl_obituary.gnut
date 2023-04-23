@@ -22,6 +22,7 @@ global struct ObituaryCallbackParams
 	entity attacker
 	int damageSourceId
 	int scriptDamageType
+	bool victimIsOwnedTitan
 }
 /////////////////
 
@@ -318,6 +319,7 @@ function Obituary( entity attacker, string attackerClass, entity victim, int scr
 		params.attacker = attacker
 		params.damageSourceId = damageSourceId
 		params.scriptDamageType = scriptDamageType
+		params.victimIsOwnedTitan = victimIsOwnedTitan
 
 		callback( params )
 	}
